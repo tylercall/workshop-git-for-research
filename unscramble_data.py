@@ -7,34 +7,30 @@ import random
 
 def main():
 
-    # read secret code from csv file
-
-    secret_code = {}
-    
-    with open("uncrypto_partial.csv", 'r', newline='') as secret_code_data:
+    # read solution from csv file
+    solution = {}
+    with open("solution.csv", 'r', newline='') as secret_code_data:
         reader=csv.DictReader(secret_code_data)
         for row in reader:
-            real = row['real']
-            illusion = row['illusion']
-            secret_code[illusion] = real
+            real = row['true_char']
+            illusion = row['false_char']
+            solution[illusion] = real
 
-
-    # unscramble using secret code
-
+    # unscramble ratings using secret code
     unscrambled_ratings = []
-
     with open("scrambled_ratings.csv", 'r', newline='') as file:
 
         reader = csv.DictReader(file)
 
         for row in reader:
             unscrambled_rating = {
-                'name': unscramble(row['name'], secret_code),
-                'item': unscramble(row['item'], secret_code),
+                'name': unscramble(row['name'], solution),
+                'item': unscramble(row['item'], solution),
                 'rating': row['rating']
             }
             
-            unscrambled_ratings.insert(0, unscrambled_rating)
+            # hint: fix me
+            unscrambled_ratings.insert(0, unscrambled_rating
 
     # write unscrambled ratings to csv
 
@@ -45,21 +41,14 @@ def main():
         for rating in unscrambled_ratings:
             writer.writerow(rating)
 
-
-
 def unscramble(input, crypto):
     scrambled_chars = []
-
     for character in input:
         if character.isalpha():
             scrambled_chars.append(crypto[character])
         else:
             scrambled_chars.append(character)
-
-
     return ''.join(scrambled_chars)
-    #return scrambled_string
-
 
 if __name__ == '__main__':
     main()
